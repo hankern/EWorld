@@ -24,6 +24,7 @@
 #include <QImage>
 #include <QPen>
 #include <QFont>
+#include <QDir>
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
 #include <osg/View>
@@ -238,6 +239,18 @@ int main(int argc, char** argv)
 //    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 //    if (engine.rootObjects().isEmpty())
 //        return -1;
+
+    QDir dir("./elevation.frag.glsl");
+    dir.path();
+
+    qDebug()<<dir.path();
+    qDebug()<<dir.dirName();
+    qDebug()<<dir.homePath();
+    qDebug()<<dir.rootPath();
+    qDebug()<<dir.currentPath();
+    qDebug()<<dir.absolutePath();
+    qDebug()<<dir.canonicalPath();
+    bool bb=dir.exists();
 
 
     QImage imag;
@@ -468,11 +481,13 @@ int main(int argc, char** argv)
     osgEarth::VirtualProgram* surfaceVP = osgEarth::VirtualProgram::getOrCreate(surfaceStateSet);
     osgEarth::ShaderPackage package;
     //package.load(surfaceVP, package.ENGINE_VERT_VIEW);
+    //package.load(surfaceVP, "E:\\Projects\\QT5.12\\EWorld\\elevation.frag.glsl");//高程着色、瓦片边界、瓦片编号
     package.load(surfaceVP, "./elevation.frag.glsl");//高程着色、瓦片边界、瓦片编号
+    //package.load(surfaceVP, "E:/Projects/QT5.12/build-EWorld-Desktop_Qt_5_12_0_MSVC2017_32bit-Debug/elevation.frag.glsl");//高程着色、瓦片边界、瓦片编号
 
     osg::ref_ptr<osg::Texture2D> numTexture = new osg::Texture2D;
     numTexture->setDataVariance(osg::Object::DYNAMIC);
-    osg::Image* numImage = new osg::Image;;
+    osg::Image* numImage = new osg::Image;
     GLenum pixelFormat = GL_RGBA;
     numImage->allocateImage(256, 256, 1, pixelFormat, GL_UNSIGNED_BYTE);
     memset(numImage->data(), 0, numImage->getImageSizeInBytes());
